@@ -1,8 +1,7 @@
 {
-	"clientID":"someid",
-	"clientSecret":"somesecret",
-	"accessToken":"some-access-token",
-	"refreshToken":"a-refresh-token",
-	"characterID":"1234",
-	"timestamp":"2017-01-01T00:00:00.000Z"
+    "clientID":"<sso-app-client-id>",
+    "clientSecret":"<sso-app-secret>",
+    "accessToken": "<some-access-token>",
+    "refreshToken": "<some-refresh-token>",
+    "characterID":"<character-id>"
 }
