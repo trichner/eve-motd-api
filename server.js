@@ -1,9 +1,12 @@
 'use strict';
 
 const restify = require('restify');
+const logger = require('restify-logger');
 
 const getMotd = require('./bb-motd');
 const config = require('./config.json');
+
+const PORT = 3000;
 
 //-- fetch MOTD from time to time
 const self = this;
@@ -18,12 +21,16 @@ getMotd(config)
 setInterval(() => {
 	getMotd(config)
 		.then(motd => {
+			console.log('Updated MOTD');
 			self.motd = motd;
 		})
 }, 30000);
 
 //-- provide REST API
 const server = restify.createServer();
+
+server.use(logger('custom'));
+
 server.get('/motd/upcoming-fleets', (req, res, next) => {
 	if (!self.motd) {
 		res.send(503);
@@ -51,6 +58,6 @@ server.get('/motd/text', (req, res, next) => {
 	return next();
 });
 
-server.listen(8080, function () {
+server.listen(PORT, function () {
 	console.log('%s listening at %s', server.name, server.url);
 });
