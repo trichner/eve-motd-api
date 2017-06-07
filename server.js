@@ -31,6 +31,8 @@ const server = restify.createServer();
 
 server.use(logger('custom'));
 
+server.use(restify.CORS());
+
 server.get('/motd/upcoming-fleets', (req, res, next) => {
 	if (!self.motd) {
 		res.send(503);
