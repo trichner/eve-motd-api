@@ -16,6 +16,9 @@ let motd = null;
 getMotd(config)
 	.then(motd => {
 		self.motd = motd;
+	})
+	.catch(err => {
+		console.log(err);
 	});
 
 setInterval(() => {
@@ -24,6 +27,10 @@ setInterval(() => {
 			console.log('Updated MOTD');
 			self.motd = motd;
 		})
+		.catch(err => {
+			console.log('Failed to update MOTD');
+			console.log(err);
+		});
 }, 30000);
 
 //-- provide REST API

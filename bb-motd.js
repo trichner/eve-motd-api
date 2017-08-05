@@ -42,9 +42,14 @@ function getBBMotd(config) {
 		})
 		// find the BB channel
 		.then(channels => {
-			return channels.find(c => {
+			let bbChannel = channels.find(c => {
 				return c.channel_id === BB_CHANNEL_ID;
 			});
+			if (bbChannel === undefined) {
+				let msg = `Channel with id ${BB_CHANNEL_ID} not found in ${channels}`;
+				return q.reject(new Error(msg));
+			}
+			return bbChannel;
 		})
 		// parse motd info
 		.then(channel => {
@@ -108,7 +113,8 @@ function getKillmailDetails(killID) {
  */
 function parseChannelMotd(channel) {
 
-	let html = bleach.sanitize(channel.motd, {
+	let raw = channel.motd;
+	let html = bleach.sanitize(raw, {
 		mode: 'white',
 		list: ['url', 'color', 'br', 'b']
 	});
@@ -148,6 +154,7 @@ function parseChannelMotd(channel) {
 	return {
 		text,
 		upcomingFleets,
-		killIds
+		killIds,
+		raw
 	};
 }
