@@ -10,6 +10,8 @@ const rp = require('request-promise');
 
 module.exports = getBBMotd;
 
+const BB_CHANNEL_ID = -25642794;
+
 /**
  * Fetches the BB motd from ESI with the given credentials and enriches
  * it with details from zkillboard as well as XML api
@@ -41,7 +43,7 @@ function getBBMotd(config) {
 		// find the BB channel
 		.then(channels => {
 			return channels.find(c => {
-				return c.channel_id === -84353881;
+				return c.channel_id === BB_CHANNEL_ID;
 			});
 		})
 		// parse motd info
@@ -119,9 +121,14 @@ function parseChannelMotd(channel) {
 	// parse announced fleets
 	let upcomingFleets;
 	for (let color of colors) {
-		if (color.rawAttrs === "=0xffffffff" && color.text.substring(0, 1) === "*") {
+		if (!color.rawAttrs === "=0xffffffff") {
+			continue;
+		}
+
+		let firstChar = color.text.substring(0, 1);
+		if (['*', '-'].indexOf(firstChar) >= 0) {
 			upcomingFleets = color.text
-				.split("*")
+				.split(/[-*]/)
 				.map(s => s.trim())
 				.filter(s => !!s)
 		}
